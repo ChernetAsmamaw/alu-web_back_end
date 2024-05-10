@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""The coroutine takes no argumanets and will loop 10 times
-each time asynchronously wait 1 second, then yield a random
+"""The coroutine takes no argumanets, will loop 10 times,
+each time asynchronously wait 1 sec, then yield a random
 number between 0 and 10. Use the random module.
 """
 
