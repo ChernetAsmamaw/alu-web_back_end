@@ -15,7 +15,7 @@ from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
-    """ Test that json can be found """
+    """ Test that json can be got """
 
     @parameterized.expand([
         ("google", {"google": True}),
@@ -68,8 +68,6 @@ class TestGithubOrgClient(unittest.TestCase):
     ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
     TEST_PAYLOAD
 )
-
-
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """ Integration test for github org client """
 
