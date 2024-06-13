@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-""" Parameterize a unit test """
+""" Parameterize a unit test, Mock HTTP calls,
+and Parameterize and patch """
 
 
 import unittest
@@ -30,26 +31,49 @@ class TestAccessNestedMap(unittest.TestCase):
             self.assertEqual(wrong_output, e.exception)
 
 
-class TestGetJson(unittest.TestCase):
+class TestGetJson(TestCase):
     """ Class for testing get_json function """
-
+    # order of args: test_url, test_payload
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
-        ("http://holberton.io", {"payload": False}),
+        ("http://holberton.io", {"payload": False})
     ])
     def test_get_json(self, test_url, test_payload):
-        # Patch 'requests.get' in the 'utils' module to avoid actual HTTP calls
-        with patch('utils.requests.get') as mocked_get:
-            # Create a mock response object with a 'json' method that returns 'test_payload'
-            mocked_response = Mock()
-            mocked_response.json.return_value = test_payload
-            # Set the return value of 'requests.get' to our mock response
-            mocked_get.return_value = mocked_response
+        """ Test method returns correct output """
+        # set mock response to have return value of test payload
+        mock_response = Mock()
+        mock_response.json.return_value = test_payload
+        # function calls requests.get, need patch to get mock return value
+        with patch('requests.get', return_value=mock_response):
+            real_response = get_json(test_url)
+            self.assertEqual(real_response, test_payload)
+            # check that mocked method called once per input
+            mock_response.json.assert_called_once()
 
-            # Call the function under test with the test URL
-            result = get_json(test_url)
-            
-            # Assert that 'requests.get' was called exactly once with the correct URL
-            mocked_get.assert_called_once_with(test_url)
-            # Assert that the result of 'get_json' matches the expected payload
-            self.assertEqual(result, test_payload)
+
+
+class TestMemoize(TestCase):
+    """ Class for testing memoization """
+
+    def test_memoize(self):
+        """ Tests memoize function """
+
+        class TestClass:
+            """ Test class """
+
+            def a_method(self):
+                """ Method to always return 42 """
+                return 42
+
+            @memoize
+            def a_property(self):
+                """ Returns memoized property """
+                return self.a_method()
+
+        with patch.object(TestClass, 'a_method', return_value=42) as patched:
+            test_class = TestClass()
+            real_return = test_class.a_property
+            real_return = test_class.a_property
+
+            self.assertEqual(real_return, 42)
+            patched.assert_called_once()
