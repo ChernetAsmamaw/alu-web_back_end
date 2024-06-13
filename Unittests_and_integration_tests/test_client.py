@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-""" Parameterize and patch as decorators, Mocking,
-patching, parameterize, integration test: fixtures """
 
+"""Test fixtures"""
 
 from unittest.mock import patch, PropertyMock
 import unittest
