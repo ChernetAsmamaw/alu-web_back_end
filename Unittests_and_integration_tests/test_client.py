@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-""" Parameterize and patch as decorators, Mocking a property
-, patching, parameterize, integration test: fixtures """
+""" Parameterize and patch as decorators, Mocking,
+patching, parameterize, integration test: fixtures """
 
 
 import requests
