@@ -30,27 +30,29 @@ class TestAccessNestedMap(unittest.TestCase):
             access_nested_map(map, path)
             self.assertEqual(wrong_output, e.exception)
 
-
 class TestGetJson(unittest.TestCase):
     """ Class for testing get_json function """
-    # order of args: test_url, test_payload
+    
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False})
     ])
     def test_get_json(self, test_url, test_payload):
-        """ Test method returns correct output """
-        # set mock response to have return value of test payload
+        """ Test that get_json returns the correct output """
+        # Create a mock response object
         mock_response = Mock()
         mock_response.json.return_value = test_payload
-        # function calls requests.get, need patch to get mock return value
-        with patch('requests.get', return_value=mock_response):
+        
+        # Patch 'requests.get' to return the mock response
+        with patch('requests.get', return_value=mock_response) as mocked_get:
+            # Call the function under test
             real_response = get_json(test_url)
+            
+            # Assert that the function returns the expected payload
             self.assertEqual(real_response, test_payload)
-            # check that mocked method called once per input
-            mock_response.json.assert_called_once()
-
-
+            
+            # Assert that 'requests.get' was called exactly once with the correct URL
+            mocked_get.assert_called_once_with(test_url)
 
 class TestMemoize(unittest.TestCase):
     """ Class for testing memoization """
