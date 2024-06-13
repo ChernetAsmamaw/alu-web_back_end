@@ -31,7 +31,7 @@ class TestAccessNestedMap(unittest.TestCase):
             self.assertEqual(wrong_output, e.exception)
 
 
-class TestGetJson(TestCase):
+class TestGetJson(unittest.TestCase):
     """ Class for testing get_json function """
     # order of args: test_url, test_payload
     @parameterized.expand([
@@ -52,7 +52,7 @@ class TestGetJson(TestCase):
 
 
 
-class TestMemoize(TestCase):
+class TestMemoize(unittest.TestCase):
     """ Class for testing memoization """
 
     def test_memoize(self):
