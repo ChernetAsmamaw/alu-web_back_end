@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-""" setup a basic Flask app  """
+""" Setup a basic Flask app  """
 from flask import Flask, render_template
 
 app = Flask(__name__)
 
 
-@app.route('/')
-"""index function to render the 0-index.html template"""
+@app.route('/', methods=['GET'], strict_slashes=False)
 def index():
+    """ index function to render a simple html template """
     return render_template('0-index.html')
 
 
