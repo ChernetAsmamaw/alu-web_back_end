@@ -14,13 +14,15 @@ class Config:
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
 
+
 app.config.from_object(Config)
 
 
-@babel.localeselector
+@babel.localeselector()
 def get_locale():
     """ Get locale selector for babel """
     return request.accept_languages.best_match(app.config['LANGUAGES'])
+
 
 @app.route('/', methods=["GET"], strict_slashes=False)
 def index():
