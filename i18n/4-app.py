@@ -20,7 +20,11 @@ app.config.from_object(Config)
 
 @babel.localeselector
 def get_locale():
-    """Get locale"""
+    """Determine the user's preferred language.
+
+    Returns:
+        str: The language code ('en' for English, 'fr' for French, etc.).
+    """
     locale = request.args.get('locale')
     if locale:
         return locale
@@ -29,7 +33,11 @@ def get_locale():
 
 @app.route('/', methods=["GET"], strict_slashes=False)
 def index():
-    ''' return the html template '''
+    ''' Render the main index template.
+
+    Returns:
+        str: Rendered HTML template.
+    '''
     return render_template('4-index.html')
 
 
