@@ -32,7 +32,6 @@ def before_request():
     g.user = get_user()
 
 
-
 def get_user():
     ''' Retrive user info form users dict'''
     user_id = request.args.get('login_as')
