@@ -44,7 +44,12 @@ def get_user():
 
 @babel.timezoneselector
 def get_timezone():
-    ''' the best time zone '''
+    '''
+        Get timezone it's depents of follow requirements
+        1.- Find timezone parameter in URL parameters
+        2.- Find time zone from user settings
+        3.- Default to UTC
+    '''
     user_timez = request.args.get('timezone', None)
     if not user_timez and g.user:
         user_timez = g.user.get('timezone')
