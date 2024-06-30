@@ -29,3 +29,16 @@ for value, fn in TEST_CASES.items():
     retrieved_value = cache.get(key, fn=fn)
     print(f"Stored value: {value}, Retrieved value: {retrieved_value}")
     assert retrieved_value == value
+
+
+# Test INCR incrimenting values
+
+cache.store(b"first")
+print(cache.get(cache.store.__qualname__))
+
+cache.store(b"second")
+cache.store(b"third")
+print(cache.get(cache.store.__qualname__))
+
+
+# Test

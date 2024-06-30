@@ -8,6 +8,23 @@ Redis Module
 import redis
 import uuid
 from typing import Union, Callable, Optional
+from functools import wraps
+
+
+def count_calls(method: Callable) -> Callable:
+    '''
+    Decorator to count method calls and store in Redis.
+
+    Count how many times methods of the Cache class are called.
+    Above Cache define a count_calls decorator that takes a single
+    method Callable argument and returns a Callable.
+    '''
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        key_m= method.__qualname__
+        self._redis.incr(key_m)
+        return method(self, *args, **kwargs)
+    return wrapper
 
 
 class Cache:
@@ -22,6 +39,8 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         '''
         Store the data in Redis using a random key and return the key.
@@ -38,6 +57,7 @@ class Cache:
 
     def get(self, key: str, fn: Optional[Callable] = None) -> Union[str, bytes, int, float, None]:
         '''
+        Redis only allows to store string, bytes and numbers (and lists thereof).
         Retrieve the data stored in Redis using the given key and apply
         the provided transformation function (fn) if available.
 
@@ -54,7 +74,6 @@ class Cache:
     def get_str(self, key: str) -> Optional[str]:
         '''
         Retrieve data as a UTF-8 decoded string.
-
         :param key: The key string used to store the data in Redis.
         '''
         return self.get(key, lambda d: d.decode('utf-8'))
@@ -62,7 +81,6 @@ class Cache:
     def get_int(self, key: str) -> Optional[int]:
         '''
         Retrieve data as an integer.
-
         :param key: The key string used to store the data in Redis.
         '''
         return self.get(key, lambda d: int(d))
