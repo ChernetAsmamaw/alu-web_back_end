@@ -1,68 +1,55 @@
 #!/usr/bin/env python3
-"""
-Cache web module
-"""
+'''
+Web caching module using Redis
+
+This module provides functions for caching web pages using Redis.
+It includes a decorator `count_requests` to count requests and cache
+responses for a specified duration.
+'''
 
 import redis
 import requests
 from typing import Callable
 from functools import wraps
 
-# Initialize Redis client
-redis_client = redis.Redis()
 
+# Initialize Redis connection
+redis_connection = redis.Redis()
 
-def count_requests(method: Callable) -> Callable:
+def count_requests(func: Callable) -> Callable:
     """
-    Decorator to count how many times a URL is accessed and cache its content with expiry.
+    Decorator function to count requests and cache responses in Redis.
 
-    Args:
-        method (Callable): The function to decorate.
-
-    Returns:
-        Callable: The decorated function.
+    - func (Callable): expects a URL string as argument.
+    - Callable: caches responses and increments request count.
     """
 
-    @wraps(method)
-    def wrapper(url: str) -> str:
+    @wraps(func)
+    def wrapper(url):
         """
-        Wrapper function that counts URL accesses and caches content.
+        Wrapper function to count requests and cache responses.
 
-        Args:
-            url (str): The URL to fetch.
-
-        Returns:
-            str: The HTML content of the webpage.
+        - url (str): URL of the web page to fetch and cache.
+        - str: Cached HTML content of the web page.
         """
-        redis_client.incr(f"count:{url}")
-        cached_html = redis_client.get(f"cached:{url}")
+        redis_connection.incr(f"request_count:{url}")  # Increment request count for the URL
+        cached_html = redis_connection.get(f"cached_content:{url}")  # Check if URL is cached
         if cached_html:
-            return cached_html.decode('utf-8')
+            return cached_html.decode('utf-8')  # Return cached HTML
 
-        html_content = method(url)
-        redis_client.setex(f"cached:{url}", 10, html_content)  # Cache expires in 10 seconds
+        html_content = func(url)  # Fetch HTML content from the URL
+        redis_connection.setex(f"cached_content:{url}", 10, html_content)  # Cache HTML content for 10 seconds
         return html_content
 
     return wrapper
 
-
 @count_requests
 def get_page(url: str) -> str:
     """
-    Fetches the HTML content of a given URL using the requests module.
+    Function to fetch a web page using HTTP GET request.
 
-    Args:
-        url (str): The URL of the webpage to fetch.
-
-    Returns:
-        str: The HTML content of the webpage.
-
-    Raises:
-        requests.RequestException: If there was an error fetching the webpage.
+    - url (str): URL of the web page to fetch.
+    - str: HTML content of the fetched web page.
     """
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        return response.text
-    except requests.RequestException as e:
-        raise e
+    response = requests.get(url)  # Perform HTTP GET request
+    return response.text  # Return HTML content of the response
