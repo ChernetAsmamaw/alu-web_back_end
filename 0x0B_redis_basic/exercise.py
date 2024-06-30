@@ -13,7 +13,7 @@ from functools import wraps
 
 def count_calls(method: Callable) -> Callable:
     '''
-    Decorator to count method calls and store in Redis.
+    Counts method calls and stores in Redis.
 
     Count how many times methods of the Cache class are called.
     Above Cache define a count_calls decorator that takes a single
@@ -24,6 +24,37 @@ def count_calls(method: Callable) -> Callable:
         key_m= method.__qualname__
         self._redis.incr(key_m)
         return method(self, *args, **kwargs)
+    return wrapper
+
+
+def call_history(method: Callable) -> Callable:
+    '''
+    Records inputs and outputs of method calls to Redis lists.
+
+    Everytime the original function will be called, we will add its input
+    parameters to one list in redis, and store its output into another list.
+    In call_history, use the decorated function’s qualified name and append
+    ":inputs" and ":outputs" to create input and output list keys, respectively.
+    call_history has a single parameter named method that is a Callable and
+    returns a Callable.
+    '''
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        key_m = method.__qualname__
+        inp_key = key_m + ':inputs'
+        outp_key = key_m + ':outputs'
+
+        # Record inputs
+        self._redis.rpush(inp_key, str(args))
+
+        # Execute the original method to get the result
+        result = method(self, *args, **kwargs)
+
+        # Record output
+        self._redis.rpush(outp_key, str(result))
+
+        return result
+
     return wrapper
 
 
@@ -41,6 +72,7 @@ class Cache:
 
 
     @count_calls
+    @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
         '''
         Store the data in Redis using a random key and return the key.
