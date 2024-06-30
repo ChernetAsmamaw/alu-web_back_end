@@ -21,7 +21,7 @@ def count_calls(method: Callable) -> Callable:
     '''
     @wraps(method)
     def wrapper(self, *args, **kwargs):
-        key_m= method.__qualname__
+        key_m = method.__qualname__
         self._redis.incr(key_m)
         return method(self, *args, **kwargs)
     return wrapper
@@ -32,11 +32,11 @@ def call_history(method: Callable) -> Callable:
     Records inputs and outputs of method calls to Redis lists.
 
     Everytime the original function will be called, we will add its input
-    parameters to one list in redis, and store its output into another list.
-    In call_history, use the decorated function’s qualified name and append
-    ":inputs" and ":outputs" to create input and output list keys, respectively.
-    call_history has a single parameter named method that is a Callable and
-    returns a Callable.
+    parameters to one list in redis, and store its output into another
+    list. In call_history, use the decorated function’s qualified name
+    and append ":inputs" and ":outputs" to create input and output list
+    keys, respectively. call_history has a single parameter named method
+    that is a Callable and returns a Callable.
     '''
     @wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -76,16 +76,21 @@ def replay(func: Callable):
     outputs = replay.lrange(outp_key, 0, -1)
     calls_number = len(inputs)
 
-    print("{} was called {} time{}:".format(key_m, calls_number, '' if calls_number == 1 else 's'))
+    print("{} was called {} time{}:".format(key_m, calls_number,
+                                            '' if calls_number == 1 else 's'))
     for inp, outp in zip(inputs, outputs):
         args = eval(inp.decode('utf-8'))
         outPt = outp.decode('utf-8')
         print("{}(*{}) -> {}".format(key_m, args, outPt))
 
 
-
-
 class Cache:
+    '''
+    A class that interfaces with Redis for storing and retrieving data.
+
+    Attributes:
+        _redis (redis.Redis): Redis client instance for data storage.
+    '''
     def __init__(self):
         '''
         Initializes the Cache class.
@@ -104,17 +109,19 @@ class Cache:
         '''
         Store the data in Redis using a random key and return the key.
 
-        Create a store method that takes a data argument and returns a string.
-        The method should generate a random key (e.g. using uuid), store the
-        input data in Redis using the random key and return the key.
-        Type-annotate store correctly. Remember that data can be a str, bytes,
-        int or float.
+        Create a store method that takes a data argument and returns
+        a string.
+        The method should generate a random key (e.g. using uuid),
+        store the input data in Redis using the random key and return
+        the key. Type-annotate store correctly. Remember that data can
+        be a str, bytes, int or float.
         '''
         key = str(uuid.uuid4())
         self._redis.set(key, data)
         return key
 
-    def get(self, key: str, fn: Optional[Callable] = None) -> Union[str, bytes, int, float, None]:
+    def get(self, key: str, fn: Optional[Callable] = None) -> \
+            Union[str, bytes, int, float, None]:
         '''
         Redis only allows to store string, bytes and numbers (and lists thereof).
         Retrieve the data stored in Redis using the given key and apply
