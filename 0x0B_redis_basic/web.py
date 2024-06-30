@@ -16,6 +16,7 @@ from functools import wraps
 # Initialize Redis connection
 redis_connection = redis.Redis()
 
+
 def count_requests(func: Callable) -> Callable:
     '''
     Decorator function to count requests and cache responses in Redis.
@@ -32,16 +33,17 @@ def count_requests(func: Callable) -> Callable:
         - url (str): URL of the web page to fetch and cache.
         - str: Cached HTML content of the web page.
         '''
-        redis_connection.incr(f"request_count:{url}")  # Increment request count for the URL
-        cached_html = redis_connection.get(f"cached_content:{url}")  # Check if URL is cached
+        redis_connection.incr(f"request_count:{url}")
+        cached_html = redis_connection.get(f"cached_content:{url}")
         if cached_html:
-            return cached_html.decode('utf-8')  # Return cached HTML
+            return cached_html.decode('utf-8')
 
-        html_content = func(url)  # Fetch HTML content from the URL
-        redis_connection.setex(f"cached_content:{url}", 10, html_content)  # Cache HTML content for 10 seconds
+        html_content = func(url)
+        redis_connection.setex(f"cached_content:{url}", 10, html_content)
         return html_content
 
     return wrapper
+
 
 @count_requests
 def get_page(url: str) -> str:
@@ -53,4 +55,3 @@ def get_page(url: str) -> str:
     '''
     response = requests.get(url)  # Perform HTTP GET request
     return response.text  # Return HTML content of the response
-
