@@ -102,7 +102,6 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
-
     @count_calls
     @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
@@ -123,12 +122,14 @@ class Cache:
     def get(self, key: str, fn: Optional[Callable] = None) -> \
             Union[str, bytes, int, float, None]:
         '''
-        Redis only allows to store string, bytes and numbers (and lists thereof).
+        Redis only allows to store string, bytes and numbers
+        (and lists thereof).
         Retrieve the data stored in Redis using the given key and apply
         the provided transformation function (fn) if available.
 
-        :param key: The key string used to store the data in Redis.
-        :param fn: An optional callable to transform the data back to the desired format.
+        key: The key string used to store the data in Redis.
+        fn: An optional callable to transform the data back
+        to the desired format.
         '''
         data = self._redis.get(key)
         if data is None:
@@ -140,13 +141,13 @@ class Cache:
     def get_str(self, key: str) -> Optional[str]:
         '''
         Retrieve data as a UTF-8 decoded string.
-        :param key: The key string used to store the data in Redis.
+        key: The key string used to store the data in Redis.
         '''
         return self.get(key, lambda d: d.decode('utf-8'))
 
     def get_int(self, key: str) -> Optional[int]:
         '''
         Retrieve data as an integer.
-        :param key: The key string used to store the data in Redis.
+        key: The key string used to store the data in Redis.
         '''
         return self.get(key, lambda d: int(d))
