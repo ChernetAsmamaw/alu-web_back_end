@@ -1,9 +1,9 @@
 -- Write a SQL script that creates a trigger that resets the attribute valid_email only when the email has been changed.
 
-DElIMITER $$
+DELIMITER $$
 
 CREATE TRIGGER new_email
-UPDATE ON users
+BEFORE UPDATE ON users
 FOR EACH ROW
 BEGIN
     IF OLD.email != NEW.email THEN
