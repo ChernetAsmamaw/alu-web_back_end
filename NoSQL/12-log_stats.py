@@ -9,13 +9,14 @@ METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"]
 
 def log_stats(mongo_collection, option=None):
     ''' Log Nginx stats from collection '''
+    item = {}
     if option:
         value = mongo_collection.count_documents(
             {"method": {"$regex": option}})
         print(f"\tmethod {option}: {value}")
         return
 
-    total = mongo_collection.count_documents({})
+    total = mongo_collection.count_documents(item)
     print(f"{total} logs")
     print("Methods:")
     for method in METHODS:

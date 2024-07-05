@@ -12,13 +12,14 @@ PIPE = [{'$group': {'_id': '$ip', 'count': {'$sum': 1}}},
 
 def log_stats(mongo_collection, option=None):
     ''' Return the top 10 of the most present IPs in the collection nginx of the database logs'''
+    item = {}
     if option:
         value = mongo_collection.count_documents(
             {'method': {'$regex': option}})
         print(f"\tmethod {option}: {value}")
         return
 
-    total = mongo_collection.count_documents({})
+    total = mongo_collection.count_documents(item)
     print(f"{total} logs")
     print('Methods:')
     for method in METHODS:
