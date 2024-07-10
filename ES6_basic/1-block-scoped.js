@@ -1,5 +1,3 @@
-// hoisting | make sure variables aren't overwritten inside the condition block
-
 export default function taskBlock(trueOrFalse) {
   const task = false;
   const task2 = true;

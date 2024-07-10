@@ -1,5 +1,3 @@
-// Rewrite the return statement to use a template literal so you can then substitute the variables you’ve defined.
-
 function getSanFranciscoDescription() {
   const year = 2017;
   const budget = {
