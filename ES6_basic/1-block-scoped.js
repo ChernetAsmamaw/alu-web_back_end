@@ -8,6 +8,6 @@ export default function taskBlock(trueOrFalse) {
     // eslint-disable-next-line
     const task2 = false;
   }
-  
+
   return [task, task2];
 }
