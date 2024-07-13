@@ -1,8 +1,10 @@
 // Append three handlers to the function
 
 export default function handleResponseFromAPI(promise) {
+  const body = { status: 200, body: 'success' };
+
   return promise
-    .then(() => ({ status: 200, body: 'success' }))
+    .then(() => body)
     .catch((error) => error)
-    .finaly (() => console.log('Got a response from the API'));
+    .finally(() => console.log('Got a response from the API'));
 }
