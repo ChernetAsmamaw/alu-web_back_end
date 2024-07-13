@@ -16,4 +16,4 @@ export default async function handleProfileSignup(firstName, lastName, fileName)
     });
   }
   return result;
-};
+}
