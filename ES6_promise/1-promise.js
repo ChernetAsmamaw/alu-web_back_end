@@ -2,10 +2,9 @@
 
 export function getResponseFromAPI(bool) {
   return new Promise((resolve, reject) => {
-    if (bool) {
-    resolve({ status: 200, message: 'Success' });
-    } else {
-    reject( new Error('The fake API is not working currently') );
+    if (success) {
+      resolve({ status: 200, message: 'success' });
     }
+    reject(Error('The fake API is not working currently'));
   });
 }

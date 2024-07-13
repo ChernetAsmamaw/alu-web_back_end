@@ -1,4 +1,4 @@
-// Write and export a function named loadBalancer. It should accept two arguments chinaDownload (Promise) and USDownload (Promise).
+// Function named loadBalancer accepts two arguments both are promises.
 
 export default function loadBalancer(chinaDownload, USDownload) {
   return Promise.race([chinaDownload, USDownload]);

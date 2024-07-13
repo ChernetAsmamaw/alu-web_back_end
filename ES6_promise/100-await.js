@@ -1,6 +1,6 @@
 // Write an async function named asyncUploadUser that will call these two functions and return an object
 
-export { uploadPhoto, createUser } from './utils';
+import { uploadPhoto, createUser } from './utils';
 
 export default async function asyncUploadUser() {
   let results = {
@@ -15,6 +15,6 @@ export default async function asyncUploadUser() {
     };
     return results;
     } catch (error) {
-      return error;
+      return results;
     }
-};
+}

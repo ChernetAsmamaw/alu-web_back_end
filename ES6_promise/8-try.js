@@ -1,4 +1,4 @@
-// Write a function named divideFunction that will accept two arguments: numerator (Number) and denominator (Number).
+// Write a function named divideFunction that will accept two arguments both are numbers.
 
 export default function divideFunction(numerator, denominator) {
   if (denominator === 0) {
