@@ -1,6 +1,6 @@
-// pricing
+// pricing class
 
-import { code, name } from './3-currency';
+import Currency from './3-currency';
 
 export default class Pricing {
   constructor(amount, currency) {
@@ -28,7 +28,7 @@ export default class Pricing {
     return `${this._amount} ${this._currency.displayFullCurrency()}`;
   }
 
-  convertPrice(amount, conversionRate) {
+  static convertPrice(amount, conversionRate) {
     return amount * conversionRate;
   }
 }
