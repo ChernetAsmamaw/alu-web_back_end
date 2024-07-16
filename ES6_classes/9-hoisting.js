@@ -1,3 +1,5 @@
+// Hoisting
+
 class HolbertonClass {
   constructor(year, location) {
     this._year = year;
@@ -30,6 +32,10 @@ class StudentHolberton {
   get holbertonClass() {
     return this.holbertonClass;
   }
+
+  get fullStudentDescription() {
+    return `${self._firstName} ${self._lastName} - ${self._holbertonClass.year} - ${self._holbertonClass.location}`;
+  }
 }
 
 const student1 = new StudentHolberton('Guillaume', 'Salva', class2020);
@@ -38,5 +44,5 @@ const student3 = new StudentHolberton('Albert', 'Clinton', class2019);
 const student4 = new StudentHolberton('Donald', 'Bush', class2019);
 const student5 = new StudentHolberton('Jason', 'Sandler', class2019);
 
-const listOfStudents = [student1, student2, student3, student4, student5];
-export default listOfStudents;
+const students = [student1, student2, student3, student4, student5];
+export default students;
