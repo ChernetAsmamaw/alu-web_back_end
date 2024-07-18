@@ -1,13 +1,11 @@
-// Create a function updateStudentGradeByCity that returns an array of students for a specific city with their new grade.
+// updateStudentGradeByCity returns an array of students in specific city with their new grade.
 
-export default function updateStudentGradeByCity(arr, city, newGrades) {
-  if (!Array.isArray(arr)) {
-    return [];
-  }
-  return arr.filter((item) => item.location === city).map((item) => {
-    if (newGrades.length === 0) {
-      return { ...item, grade: 'N/A' };
-    }
-    return { ...item, grade: newGrades };
+export default function updateStudentGradeByCity(students, city, newGrades) {
+  return students.filter((student) => student.location === city).map((student) => {
+    const grade = newGrades.filter((newGrade) => newGrade.studentId === student.id);
+    return {
+      ...student,
+      grade: grade.length ? grade[0].grade : 'N/A',
+    };
   });
 }
