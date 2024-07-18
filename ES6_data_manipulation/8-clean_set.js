@@ -7,8 +7,8 @@ export default function cleanSet(set, startString) {
 
   const stringSet = [];
   [...set].forEach((item) => {
-    if (item && item.indexOf(startString) === 0) {
-      stringSet.push(x.replace(startString, ''));
-    }});
+    if (item && item.indexOf(startString) === 0)
+        stringSet.push(item.replace(startString, ''));
+    });
     return stringSet.join('-');
 }
