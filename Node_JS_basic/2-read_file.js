@@ -9,10 +9,10 @@ export default function countStudents(path) {
     const data = fs.readFileSync(path, 'utf8');
 
     // Split the file contents into lines and filter out empty lines
-    const lines = data.split('\n').filter(line => line.trim() !== '');
+    const lines = data.split('\n').filter((line) => line.trim() !== '');
 
     // Remove the header line
-    const header = lines.shift();
+    lines.shift();
 
     // Initialize an object to keep track of students by field
     const studentsByField = {};
@@ -22,7 +22,7 @@ export default function countStudents(path) {
 
     // Iterate over each line to process student data
     lines.forEach(line => {
-      const [firstname, lastname, age, field] = line.split(',').map(value => value.trim());
+      const [firstname, lastname, age, field] = line.split(',').map((value) => value.trim());
 
       // Only process the line if all required fields are present
       if (firstname && lastname && age && field) {
@@ -30,7 +30,7 @@ export default function countStudents(path) {
           studentsByField[field] = [];
         }
         studentsByField[field].push(firstname);
-        totalStudents++;
+        totalStudents += 1;
       }
     });
 
