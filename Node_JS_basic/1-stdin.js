@@ -1,4 +1,4 @@
-// executed through command line
+// This program reads from stdin and writes to stdout
 
 process.stdout.write('Welcome to Holberton School, what is your name?\n');
 

@@ -1,9 +1,11 @@
-// Create a more complex server using express
+// Http server using express and async function to read a file
 
 const express = require('express');
 
 const args = process.argv.slice(2);
 const countStudents = require('./3-read_file_async');
+
+// 
 const DATABASE = args[0];
 
 const app = express();
@@ -13,18 +15,18 @@ app.get('/', (req, res) => {
   res.send('Hello Holberton School!');
 });
 
-app.get('/students', (req, res) => {
-  const message = 'This is the list of our students\n';
+app.get('/students', async (req, res) => {
+  const msg = 'This is the list of our students\n';
   try {
-    const student = countStudents(DATABASE);
-    res.send(`${message}${student.join('\n')}`);
+    const students = await countStudents(DATABASE);
+    res.send(`${msg}${students.join('\n')}`);
   } catch (error) {
-    res.send(`${message}${error.message}`);
+    res.send(`${msg}${error.message}`);
   }
 });
 
 app.listen(port, () => {
-  // console.log(`App listening at http://localhost:${port}`);
+  // console.log(`Example app listening at http://localhost:${port}`);
 });
 
 module.exports = app;

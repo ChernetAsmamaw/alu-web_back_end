@@ -1,59 +1,59 @@
-// Read file asynchronously with Node.js
+// Read a file asynchronously with Node JS
 
 const fs = require('fs');
 
-export default function countStudents(path) {
+function countStudents(path) {
   return new Promise((resolve, reject) => {
-    fs.readFile(path, { encoding: 'utf-8' }, (error, fileData) => {
-      if (error) {
-        return reject(Error('Cannot load the database'));
+    fs.readFile(path, 'utf8', (err, data) => {
+      if (err) {
+        reject(Error('Cannot load the database'));
+        return;
       }
+      const response = [];
+      let msg;
 
-      // Split fileData into lines and remove the header line
-      const lines = fileData.split('\n').slice(1, -1);
+      const content = data.toString().split('\n');
 
-      // Get the header line and split it into columns
-      const header = fileData.split('\n')[0].split(',');
+      // Filter out empty lines
+      let students = content.filter((item) => item);
 
-      // Find indices for 'firstname' and 'field' columns
-      const firstNameIndex = header.findIndex((column) => column === 'firstname');
-      const fieldIndex = header.findIndex((column) => column === 'field');
+      students = students.map((item) => item.split(','));
 
-      // Initialize dictionaries to count students per field and store student names
-      const fieldCounts = {};
-      const studentNames = {};
+      // If students is not empty/truthy, subtract 1 to remove the header
+      const NUMBER_OF_STUDENTS = students.length ? students.length - 1 : 0;
+      msg = `Number of students: ${NUMBER_OF_STUDENTS}`;
+      console.log(msg);
 
-      lines.forEach((line) => {
-        // Split each line into columns
-        const columns = line.split(',');
-        const field = columns[fieldIndex];
-        const firstName = columns[firstNameIndex];
+      // push the message to the response array which will be returned
+      response.push(msg);
 
-        // Update fieldCounts dictionary: initialize if field is not already in the dictionary
-        if (!fieldCounts[field]) {
-          fieldCounts[field] = 0;
-          studentNames[field] = '';
-        }
+      const fields = {};
+      for (const i in students) {
+        if (i !== 0) {
+          // If the field is not defined, create an empty array for the field of study
+          // fields[students[i][3]] is equivalent to cs or swe
+          if (!fields[students[i][3]]) fields[students[i][3]] = [];
 
-        // Increment the count for the field
-        fieldCounts[field] += 1;
-
-        // Append the student's first name to the list of names for the field
-        studentNames[field] += studentNames[field] ? `, ${firstName}` : firstName;
-      });
-
-      // Output the total number of students
-      console.log(`Number of students: ${lines.length}`);
-
-      // Output the number of students and list of names for each field
-      for (const field in fieldCounts) {
-        if (Object.hasOwnProperty.call(fieldCounts, field)) {
-          console.log(`Number of students in ${field}: ${fieldCounts[field]}. List: ${studentNames[field]}`);
+          // Push the names of the students to the array of their field of study
+          fields[students[i][3]].push(students[i][0]);
         }
       }
 
-      // Resolve the promise
-      resolve();
+      // Remove the field key from the object
+      delete fields.field;
+
+      for (const key of Object.keys(fields)) {
+        msg = `Number of students in ${key}: ${
+          fields[key].length
+        }. List: ${fields[key].join(', ')}`;
+
+        console.log(msg);
+
+        response.push(msg);
+      }
+      resolve(response);
     });
   });
-};
+}
+
+module.exports = countStudents;

@@ -1,14 +1,16 @@
-// Create a small server using express
+// Small server using express module
 
 const express = require('express');
+
 const app = express();
+const port = 1245;
 
 app.get('/', (req, res) => {
-  res.send('Hello World');
+  res.send('Hello Holberton School!');
 });
 
-app.listen(1245, () => {
-  //console.log('Server started on http://localhost:1245');
+app.listen(port, () => {
+  //   console.log(`Example app listening at http://localhost:${port}`);
 });
 
 module.exports = app;

@@ -1,35 +1,48 @@
-// Read a file synchronously with Node.js
+// Read file synchronously with Node JS
 
 const fs = require('fs');
 
-export default function countStudents(path) {
+function countStudents(path) {
   let content;
+
   try {
-    content = fs.readFileSync(path, { encoding: 'utf8' });
-  } catch (error) {
+    content = fs.readFileSync(path);
+  } catch (err) {
     throw new Error('Cannot load the database');
   }
 
-  content = content.toString().split('\n')
-  students = content.filter((item) => item).map((item) => item.split(','));
+  content = content.toString().split('\n');
 
-  // Organize the students by field
+  let students = content.filter((item) => item);
+
+  students = students.map((item) => item.split(','));
+
+  const NUMBER_OF_STUDENTS = students.length ? students.length - 1 : 0;
+  console.log(`Number of students: ${NUMBER_OF_STUDENTS}`);
+
   const fields = {};
-  for (const student of students) {
-    // Skip the header by checking every array except students[0]
-    if (student !== 0) {
-      if (!fields[students[student][3]]) {
-        fields[students[student][3]] = [];
-        
-        // Add the student name to field array for each student with the same field
-        fields[students[student][3]].push(students[student][0]);
-      }
+  for (const i in students) {
+    // Skip the header by making sure to pass the first line
+    if (i !== 0) {
+      // If the field is not defined, create it
+      if (!fields[students[i][3]]) fields[students[i][3]] = [];
+
+      // Add the student to the field
+      fields[students[i][3]].push(students[i][0]);
     }
   }
 
+  // Delete the field key from the object to print only the students
   delete fields.field;
 
+  // Print each field with the list of students
   for (const key of Object.keys(fields)) {
-    console.log(`Number of students in ${key}: ${fields[key].length}. List: ${fields[key].join(', ')}`);
+    console.log(
+      `Number of students in ${key}: ${fields[key].length}. List: ${fields[
+        key
+      ].join(', ')}`,
+    );
   }
 }
+
+module.exports = countStudents;

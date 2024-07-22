@@ -1,9 +1,9 @@
-// Create a small HTTP server using Node's HTTP module
+// A simple HTTP server in Node.js
 
 const http = require('http');
 
-const PORT = 1245;
-const HOST = '127.0.0.1';
+const hostname = '127.0.0.1';
+const port = 1245;
 
 const app = http.createServer((req, res) => {
   res.statusCode = 200;
@@ -11,6 +11,8 @@ const app = http.createServer((req, res) => {
   res.end('Hello Holberton School!');
 });
 
-app.listen(PORT, HOST, () => {
-  // console.log(`Server running at http://${HOST}:${PORT}`);
+app.listen(port, hostname, () => {
+  // console.log(`Server running at http://${hostname}:${port}/`);
 });
+
+module.exports = app;
