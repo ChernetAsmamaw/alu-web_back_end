@@ -1,10 +1,8 @@
-// 0. Basic test with Mocha and Node assertion * Test
-
 const calculateNumber = require("./0-calcul.js");
 const assert = require("assert");
 
 describe('calculateNumber', () => {
-  it('Returns rounded sum od two non-negative integers.', () => {
+  it('Returns rounded sum of two non-negative integers.', () => {
     assert.strictEqual(calculateNumber(4, 8), 12);
     assert.strictEqual(calculateNumber(1.9, 0), 2);
     assert.strictEqual(calculateNumber(6.1, 6.1), 12);
